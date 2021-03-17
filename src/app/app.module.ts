@@ -6,7 +6,9 @@ import { AppComponent } from './app.component';
 import { AuthenticationService } from './service/authentication.service';
 import { UserService } from './service/user.service';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
-
+import { AuthenticationGuard } from './guard/authentication.guard';
+import { NotificationModule } from './module/notification.module';
+import { NotificationService } from './service/notification.service';
 @NgModule({
   declarations: [
     AppComponent
@@ -15,8 +17,14 @@ import { AuthInterceptor } from './interceptor/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    NotificationModule
   ],
-  providers: [AuthenticationService,UserService,{provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor}],
+  providers: [
+    NotificationService,
+    AuthenticationGuard,
+    AuthenticationService,
+    UserService,
+    {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor,multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
