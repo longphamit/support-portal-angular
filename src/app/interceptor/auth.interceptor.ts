@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from '../service/authentication.service';
-
+import{HeaderType}from "../enum/header-type.enum"
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 

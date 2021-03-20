@@ -1,6 +1,7 @@
 export class User{
     public id:number;
     public userId:string;
+    public password:string;
     public firstName:string;
     public lastName:string;
     public username:string;
@@ -26,6 +27,6 @@ export class User{
         this.notLocked=false;
         this.role="";
         this.authorities=[];
-
+        this.password="";
     }
 }
