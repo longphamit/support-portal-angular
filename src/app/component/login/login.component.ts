@@ -26,9 +26,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) { }
   
   ngOnInit(): void {
-    console.log(this.authenticationService.isLogin())
+    
     if(this.authenticationService.isLogin()){
-      this.router.navigateByUrl("user/mangement")
+      this.router.navigateByUrl("user/management")
     }else{
       this.loginForm= this.formBuilder.group({
         username:new FormControl('',[Validators.required]),
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.loading=true
       this.subsciptions.push(
         this.authenticationService.login(user).subscribe(
-          (response:HttpResponse<any>)=>{
+          (response:HttpResponse<User>)=>{
             const token=response.headers.get(HeaderType.JWT_TOKEN)
             this.authenticationService.saveToken(token)
             this.authenticationService.addUserToLocalCache(response.body);

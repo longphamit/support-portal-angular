@@ -10,20 +10,20 @@ import { CustomHttpResponse } from '../model/custom-http-response';
 export class UserService {
   private host=environment.apiUrl
   constructor(private http:HttpClient) { }
-  public getUsers():Observable<User[]|HttpErrorResponse>{
+  public getUsers():Observable<User[]>{
     return this.http.get<User[]>(`${this.host}/user/list`)
   }
-  public addUser(formData:FormData):Observable<User|HttpErrorResponse>{
+  public addUser(formData:FormData):Observable<User>{
     return this.http.post<User>(`${this.host}/user/add`,formData)
   }
-  public updateUser(formData:FormData):Observable<User|HttpErrorResponse>{
+  public updateUser(formData:FormData):Observable<User>{
     return this.http.post<User>(`${this.host}/user/update`,formData)
   }
-  public resetPassword(email:string):Observable<CustomHttpResponse|HttpErrorResponse>{
+  public resetPassword(email:string):Observable<CustomHttpResponse>{
     return this.http.get<CustomHttpResponse>(`${this.host}/user/reset-password/${email}`)
   }
-  public updateProfileImage(formData:FormData):Observable<HttpEvent<any>|HttpErrorResponse>{
-    return this.http.post<HttpEvent<any>|HttpErrorResponse>(`${this.host}/user/updateProfileImage`,formData,
+  public updateProfileImage(formData:FormData):Observable<HttpEvent<any>>{
+    return this.http.post<HttpEvent<any>>(`${this.host}/user/updateProfileImage`,formData,
     {
       reportProgress:true,
       observe:'events'
