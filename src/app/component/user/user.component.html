@@ -1,41 +1,51 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
-    <div class="row mb-2 mt-2 text-center">
-        <div class="col-md-4">
+    <div class="jumbotron">
+        <div class="row mb-2 mt-2 text-center">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+                <h5>User Management Portal</h5>
+                <small *ngIf="titleAcion$|async as title">{{title}}</small>
+            </div>
+            <div class="col-md-4">
+            </div>
         </div>
-        <div class="col-md-4">
-            <h5>User Management Portal</h5>
-            <small *ngIf="titleAcion$|async as title">{{title}}</small>
-        </div>
-        <div class="col-md-4">
-        </div>
-    </div>
-    <!-- nav bar -->
-    <nav class="navbar navbar-expand-md breadcrumb">
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="nav nav-pills">
+          <!-- nav bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <a class="nav-item nav-link active ml-1" (click)="changeTitle('Users')" data-toggle="tab" href="#">
                     <i class="fa fa-users"></i>
                     Users
                 </a>
-                <a class="nav-item nav-link ml-3" data-toggle="tab" (click)="changeTitle('Change Password')" href="#">
-                    <i class="fa fa-cogs"></i>
-                    Settings
-                </a>
-                <a class="nav-item nav-link move-right mr-3 " data-toggle="tab" (click)="changeTitle('Profile')"
+              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link ml-3" data-toggle="tab" (click)="changeTitle('Change Password')" href="#">
+                        <i class="fa fa-cogs"></i>
+                        Settings
+                    </a>
+                </li>
+              </ul>
+              <a class="nav-item nav-link move-right mr-3 " data-toggle="tab" (click)="changeTitle('Profile')"
                     href="#">
                     Welcome {{getLastName()}}
                     <i class="fa fa-user"></i>
                 </a>
             </div>
-        </div>
-    </nav>
+          </nav>
+    </div>
 
-    <div>
-        <input placeholder="Search users...">
-        <button id="btnSearch" class="btn btn-info">Search</button>
-        <button id="btnAdd" class="btn btn-success">Add</button>
-        <button id="btnAdd" (click)="logout()" class="btn btn-danger">Logout</button>
+    <div class="input-group mb-3">
+        <input class="form-control" placeholder="Search users...">
+        <button id="btnSearch" class="btn btn-info" ><i class="fas fa-search" style="margin-right: 10px;"></i>Search</button>
+        <button id="btnAdd" class="btn btn-success" data-toggle="modal" data-target="#addUserModal"><i class="fas fa-plus" style="margin-right: 10px;"></i>Add</button>
+        <button id="btnAdd" (click)="logout()" class="btn btn-danger"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</button>
     </div>
 
     <hr>
@@ -81,7 +91,7 @@
                                         
                                         <td style="width: 20%;">
 
-                                            <a href="#" class="table-link text-info">
+                                            <a href="#" class="table-link text-info" (click)="setUserSelected(appUser)" data-toggle="modal" data-target="#viewUserModal">
                                                 <span class="fa-stack">
                                                     <i class="fa fa-square fa-stack-2x"></i>
                                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
@@ -103,3 +113,158 @@
             </div>
         </div>
     </div>
+    <!--Modal detail-->
+    <div class="modal fade bd-example-modal-lg" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby=""
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">
+                User Detail
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-12 col-sm-auto">
+                      <div class="mx-auto" style="width: 120px;">
+                        <div class="d-flex justify-content-center align-items-center rounded">
+                          <img class="rounded" height="120" width="120" src="{{userSelected?.profileImageUrl}}" alt="{{userSelected?.email}}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col d-flex flex-column flex-sm-row justify-content-between">
+                      <div class="text-center text-sm-left mb-sm-0">
+                        <h6 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{userSelected?.lastName}}</h6>
+                        <p class="mb-1">{{userSelected?.username}}</p>
+                        <div class="">Status:
+                          <span [hidden]="!userSelected?.active" class="badge badge-success">Active</span>
+                          <span [hidden]="userSelected?.active" class="badge badge-danger">InActive</span>
+                        </div>
+                        <div  class="text-muted"><small>{{userSelected?.lastLoginDateDisplay|date:'medium'}}</small>
+                        </div>
+                      </div>
+                      <div class="text-center text-sm-right">
+                        <div class="text-muted"><small>Joined {{userSelected?.joinDate|date:'medium'}} </small></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"></li>
+                  <li class="list-group-item"><i class="fas fa-ad float-right"></i>{{userSelected?.userId}}
+                  </li>
+                  <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{userSelected?.email}}
+                  </li>
+                  <li class="list-group-item"><i class="fas fa-shield-alt float-right"></i>{{userSelected?.roles}}
+                  <li class="list-group-item"><i
+                      class="fas fa-sign-in-alt float-right"></i>{{userSelected?.lastLoginDateDisplay|date:'medium'}}
+                  </li>
+                  <li class="list-group-item">
+                   
+                    <span *ngIf="userSelected?.notLocked">
+                      <i  class="fa fa-unlock float-right" style="color: green;"></i>
+                        Account Unlocked
+                    </span>
+                    <span *ngIf="!userSelected?.notLocked">
+                        <i  class="fa fa-lock float-right" style="color: red;"></i>
+                          Account Locked
+                      </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Modal Add user-->
+    <div  class="modal draggable fade bd-example-modal-lg" id="addUserModal" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center">New User</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <form [formGroup]="addUserForm" >
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input type="text" formControlName="firstName" required name="firstName" required  class="form-control">
+                  <span class="errorMessage" *ngIf="addUserForm.controls.firstName.invalid&& addUserForm.controls.firstName.touched||addUserForm.controls.firstName.invalid&&addSubmitCheck==true">FirstName invalid</span>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" formControlName="lastName"  required name="lastName" required  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" formControlName="username" required name="username" required  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" formControlName="email" required name="email" required  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="authority">Role</label>
+                  <select formControlName="roles" name="role" required ngModel="ROLE_USER" class="form-control">
+                    <option value="ROLE_USER">USER</option>
+                    <option value="ROLE_HR">HR</option>
+                    <option value="ROLE_MANAGER">MANAGER</option>
+                    <option value="ROLE_ADMIN">ADMIN</option>
+                    <option value="ROLE_SUPER_ADMIN">SUPER ADMIN</option>
+                  </select>
+                </div>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Profile Picture </span>
+                  </div>
+                  <div class="custom-file">
+                    <input type="file" (change)="onProfileImageChanged($event)" formControlName="profileImage"  accept="image/*" name="profileImage"
+                      class="custom-file-input">
+                    <label class="custom-file-label">
+                      <span>Choose File</span>
+                      <span>{{fileName}}</span>
+                    </label>
+                    
+                  </div>
+                </div>
+                <fieldset class="form-group">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input formControlName="active" type="checkbox" name="active" ngModel class="form-check-input" >
+                      Acitve
+                    </label>
+                  </div>
+                  <div class="form-check disabled">
+                    <label class="form-check-label">
+                      <input type="checkbox" formControlName="notLocked" name="notLocked" ngModel class="form-check-input">
+                      Unlocked
+                    </label>
+                  </div>
+                </fieldset>
+                <button type="submit" style="display: none;" id="new-user-save"></button>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="new-user-close">Close</button>
+                  <button type="button" (click)="saveNewUser()"  class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+    

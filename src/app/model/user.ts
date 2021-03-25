@@ -11,7 +11,8 @@ export class User{
     public profileImageUrl:string;
     public active:boolean;
     public notLocked:boolean;
-    public role:string;
+    public roles:string;
+    public lastLoginDateDisplay:Date;
     public authorities:[];
     constructor(){
         this.id=0,
@@ -21,11 +22,12 @@ export class User{
         this.username="";
         this.email="";
         this.loginDateDisplay=new Date();
+        this.lastLoginDateDisplay=new Date();
         this.joinDate=new Date();
         this.profileImageUrl="";
         this.active=false;
         this.notLocked=false;
-        this.role="";
+        this.roles="";
         this.authorities=[];
         this.password="";
     }
