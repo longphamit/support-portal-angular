@@ -38,8 +38,9 @@ export class UserService {
   public getUsersFromLocalCache():User[]{
    return JSON.parse(localStorage.getItem('users')||'{}')
   }
-  public createUserFormData(loggedInUsername:string,user:User,profileImage:File):FormData{
+  public createUserFormData(currentUsername:string,user:User,profileImage:File):FormData{
     const formData=new FormData();
+    currentUsername?formData.append("currentUsername",currentUsername):null
     formData.append("firstName",user.firstName);
     formData.append("lastName",user.lastName);
     formData.append("username",user.username);
@@ -47,7 +48,9 @@ export class UserService {
     formData.append("role",user.roles);
     formData.append("isActive",JSON.stringify(user.active));
     formData.append("isNonLocked",JSON.stringify(user.notLocked));
-    formData.append("profileImage",profileImage);
+    if(profileImage){
+      formData.append("profileImage",profileImage);
+    }
     return formData;
   }
 }

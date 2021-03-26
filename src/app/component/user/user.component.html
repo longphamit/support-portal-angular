@@ -69,11 +69,11 @@
                                     </tr>
                                 </thead>
                                 <tbody *ngFor="let appUser of users">
-                                    <tr>
-                                        <td>
+                                    <tr >
+                                        <td (click)="setUserSelected(appUser)" data-toggle="modal" data-target="#viewUserModal">
                                             <img src="{{appUser?.profileImageUrl}}" alt="">
                                         </td>
-                                        <td>
+                                        <td (click)="setUserSelected(appUser)" data-toggle="modal" data-target="#viewUserModal">
                                             <span class="user-subhead">{{appUser?.userId}}</span>
                                         </td>
                                         <td>{{appUser?.firstName}}</td>
@@ -91,13 +91,13 @@
                                         
                                         <td style="width: 20%;">
 
-                                            <a href="#" class="table-link text-info" (click)="setUserSelected(appUser)" data-toggle="modal" data-target="#viewUserModal">
+                                            <a class="table-link text-info" (click)="setUserSelected(appUser)"  data-toggle="modal" data-target="#updateUserModal" >
                                                 <span class="fa-stack">
                                                     <i class="fa fa-square fa-stack-2x"></i>
                                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                                 </span>
                                             </a>
-                                            <a href="#" class="table-link danger">
+                                            <a class="table-link danger">
                                                 <span class="fa-stack">
                                                     <i class="fa fa-square fa-stack-2x"></i>
                                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
@@ -267,4 +267,83 @@
         </div>
       </div>
     </div>
-    
+    <!--Update Modal User-->
+    <div  class="modal draggable fade bd-example-modal-lg" id="updateUserModal" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center">New User</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <form [formGroup]="updateUserForm" >
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input type="text" formControlName="firstName" [(ngModel)]="userSelected.firstName" value="{{userSelected?.firstName}}" required name="firstName" required  class="form-control">
+                  <span class="errorMessage" *ngIf="addUserForm.controls.firstName.invalid&& addUserForm.controls.firstName.touched||addUserForm.controls.firstName.invalid&&addSubmitCheck==true">FirstName invalid</span>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" formControlName="lastName" [(ngModel)]="userSelected.lastName" value="{{userSelected?.lastName}}"  required name="lastName" required  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" formControlName="username" [(ngModel)]="userSelected.username" value="{{userSelected?.username}}" required name="username" required  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" formControlName="email" [(ngModel)]="userSelected.email" value="{{userSelected?.email}}" required name="email" required  class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="authority">Role</label>
+                  <select formControlName="roles"  [(ngModel)]="userSelected.roles" value="{{userSelected?.roles}}" required ngModel="ROLE_USER" class="form-control">
+                    <option value="ROLE_USER">USER</option>
+                    <option value="ROLE_HR">HR</option>
+                    <option value="ROLE_MANAGER">MANAGER</option>
+                    <option value="ROLE_ADMIN">ADMIN</option>
+                    <option value="ROLE_SUPER_ADMIN">SUPER ADMIN</option>
+                  </select>
+                </div>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Profile Picture </span>
+                  </div>
+                  <div class="custom-file">
+                    <input type="file" (change)="onProfileImageChanged($event)" formControlName="profileImage"  accept="image/*" name="profileImage"
+                      class="custom-file-input">
+                    <label class="custom-file-label">
+                      <span>Choose File</span>
+                      <span>{{fileName}}</span>
+                    </label>
+                    
+                  </div>
+                </div>
+                <fieldset class="form-group">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input formControlName="active" [(ngModel)]="userSelected.active"  type="checkbox" value="{{userSelected?.active}}" checked="{{userSelected?.active}}" name="active" ngModel class="form-check-input" >
+                      Acitve
+                    </label>
+                  </div>
+                  <div class="form-check disabled">
+                    <label class="form-check-label">
+                      <input type="checkbox" formControlName="notLocked" [(ngModel)]="userSelected.notLocked" value="{{userSelected?.notLocked}}"  checked="{{userSelected?.notLocked}}" name="notLocked" ngModel class="form-check-input">
+                      Unlocked
+                    </label>
+                  </div>
+                </fieldset>
+                <button type="submit" style="display: none;" id="new-user-save"></button>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="new-user-close">Close</button>
+                  <button type="button" (click)="updateUser()"  class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

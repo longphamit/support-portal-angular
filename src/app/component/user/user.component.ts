@@ -16,14 +16,16 @@ import {UserService} from "src/app/service/user.service"
 export class UserComponent implements OnInit {
   private titleSubject= new BehaviorSubject<string>('Users');
   public titleAcion$=this.titleSubject.asObservable();
-  public userSelected:User;
+  public userSelected:User=new User();
   public users:User[];
   public refreshing:boolean;
   private subscriptions:Subscription[]=[]
   public addUserForm:FormGroup
+  public updateUserForm:FormGroup
   public addSubmitCheck:boolean=false
   public fileName:string
   public files:FileList
+  public currentUsername:string
   constructor(private autthenticationService:AuthenticationService,
               private userService:UserService,
               private router:Router,
@@ -79,11 +81,22 @@ export class UserComponent implements OnInit {
       active:new FormControl('',[Validators.required]),
       notLocked:new FormControl('',[Validators.required])
     })
+    this.updateUserForm=this.formBuilder.group({
+      firstName:new FormControl('',[Validators.required]),
+      lastName:new FormControl('',[Validators.required]),
+      username:new FormControl('',[Validators.required]),
+      email:new FormControl('',[Validators.required]),
+      roles:new FormControl(''),
+      profileImage:new FormControl(null),
+      active:new FormControl('',[Validators.required]),
+      notLocked:new FormControl('',[Validators.required])
+    })
     this.getUser(true);
     
   }
   public setUserSelected(user:User):void{
     this.userSelected=user
+    this.currentUsername=user.username
   }
   public addUser():void{
     this.addSubmitCheck=true;
@@ -98,7 +111,7 @@ export class UserComponent implements OnInit {
     if(this.addUserForm.valid){
         const user:User=this.addUserForm.value
         const formData:FormData =  this.userService.createUserFormData(
-          this.userService.getUsersFromLocalCache()[0].username,
+          null,
           user,
           this.files[0])
           console.log(this.files[0])
@@ -117,6 +130,25 @@ export class UserComponent implements OnInit {
           )
     }
   }
+  public updateUser(): void{
+    if(this.updateUserForm.valid){
+      const user:User=this.updateUserForm.value
+      const form:FormData=this.userService.createUserFormData(
+        this.currentUsername,
+        user,
+        this.files?this.files[0]:null
+      )
+      this.subscriptions.push(
+        this.userService.updateUser(form).subscribe((response:User)=>{
+          this.fileName=""
+          this.files=null
+          this.addUserForm.reset()
+          this.getUser(false)
+          this.notificationService.notify(NotificationType.SUCCESS,"Đã update user")
+        },(error:HttpErrorResponse)=>{
+          this.notificationService.notify(NotificationType.ERROR,"Thêm 1 user thất bại")
+        })
+      )
+    }
+  }
 }
-
-
